@@ -26,7 +26,36 @@ spring:
 
 #  profiles:
 #    active: prod
-    
+
+#circuit breaker
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+
+  endpoints:
+    web:
+      exposure:
+        include:
+        - health
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      ratingHotelBreaker:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5	
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 6s
+        permittedNumberOfCallsInHalfOpenState: 3	
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED  
+
 #eureka:
 #  client:
 #    fetch-registry: true
