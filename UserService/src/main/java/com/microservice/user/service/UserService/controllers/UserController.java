@@ -15,6 +15,7 @@ import com.microservice.user.service.UserService.entities.User;
 import com.microservice.user.service.UserService.services.UserService;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 
 @RestController
 @RequestMapping("/users")
@@ -33,7 +34,9 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
 	}
 	
+	
 	@GetMapping("/{userId}")
+//	@Retry(name="ratingHoteService",fallbackMethod="ratingHotelFallback")
 	@CircuitBreaker(name="ratingHotelBreaker",fallbackMethod="ratingHotelFallback")
 	public ResponseEntity<User> getUser(@PathVariable String userId)
 	{
